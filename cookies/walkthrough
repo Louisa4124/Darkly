@@ -1,0 +1,9 @@
+on voit dans le inspect qu'il y a un cookie dont la valeur est :
+'i_am_admin' : '68934a3e9455fa72420237eb05902327'
+
+on mettant cette valeur dans un decodeurm on se rend compte que c'est un hash MD5
+La valeur decrypter est 'false'
+
+on encrypte ensuite en MD5 'true', ca donne 'b326b5062b2f0e69046810717534cb09'
+
+On remplace la valeur du cookiem et quand on rafraichi la page, le flag apparait
