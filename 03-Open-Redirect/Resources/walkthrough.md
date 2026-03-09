@@ -9,7 +9,7 @@ Le lien sera légitime (il pointe bien vers le vrai site), mais il redirige desu
 
 On peut voir la querystring utilisé pour les redirections:
 
-![capture d'écran montrant l'url de redirection](Image.png)
+![capture d'écran montrant l'url de redirection](screenshot.png)
 
 
 Example d'url malicieux
