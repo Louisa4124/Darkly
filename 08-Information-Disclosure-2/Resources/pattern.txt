@@ -1,0 +1,7 @@
+Demande à ton voisin du dessous
+Demande à ton voisin du dessus
+Demande à ton voisin de droite
+Demande à ton voisin de gauche
+Tu veux de l'aide ? Moi aussi
+Non ce n'est toujours pas bon ...
+Toujours pas tu vas craquer non ?
