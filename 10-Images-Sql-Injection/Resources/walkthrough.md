@@ -95,6 +95,7 @@ en fouillant dans chacune d'elle, on trouve que comment affiche ceci :
 
 On suit donc les instructions, le decode md5 donne `albatroz` puis le sha256 donne  le flag `f2a29020ef3132e01dd61df97fd33ec8d7fcd1388cc9601e7db691d17d4d6188`
 
+
 ## Prévention
 
 Ne pas utiliser un input brut dans la query sql, et la 'escape' avant 
