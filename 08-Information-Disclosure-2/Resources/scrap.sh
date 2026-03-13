@@ -1,7 +1,7 @@
 #!/bin/zsh
 # scrap everythin in `.hidden`
 
-url_base=http://localhost:9784/.hidden/
+url_base=http://localhost:8080/.hidden/
 
 result_file="results.txt"
 
