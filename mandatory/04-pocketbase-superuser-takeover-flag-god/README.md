@@ -42,8 +42,7 @@ See `exploit.sh` in this folder:
 ```
 
 **Prerequisites:** the FastAPI app must be running on `http://localhost:4942`
-and PocketBase on `http://localhost:8090`; `curl` and `python3` must be
-available on `PATH`.
+and PocketBase on `http://localhost:8090`; `curl` must be available on `PATH`.
 
 **Side effects:** writes `cookies_sophie.txt` in the current working
 directory, and rotates `sophie`'s password to `G0dPwn3d!2024` — after the

