@@ -33,11 +33,15 @@ the old role), `/staff/dashboard` unlocks and its banner displays the flag.
 **Flag:** `FLAG{md5_1s_4_n4m3pl4t3_n0t_4_l0ck}`
 
 Session JWTs are HS256 with payload `{sub, login, role, exp}`, and the signing
-secret history is disclosed in a deploy-log HTML comment on every page
-(`"42"` → `"42network"`, current). Anyone who knows the secret can forge a
-token with arbitrary `login`/`role` claims. A forged `role: staff` token turns
-`/admin` from 403 to 200, and the admin panel submissions table reveals the
-flag.
+secret history is disclosed in a deploy-log HTML comment in the footer of most
+pages (`"42"` → `"42network"`, current). Anyone who knows the secret can forge
+a token with arbitrary `login`/`role` claims; the server accepts any forged
+token for authentication — even `role: visitor` — and `/api/grades` then leaks
+every grade record of the token's `sub`, including the "Darkly" meta-project
+whose `flag` field holds the flag. Note: `/admin` itself stays `403 {"detail":
+"Insufficient privileges"}` under any forged token — that gate validates the
+role against the server-side user record, not the JWT claim (it unlocks only
+for a real DB-privileged account, e.g. the `god` session from breach 4).
 
 ### Breach 3 — Stored XSS → bot SSRF
 
@@ -61,8 +65,8 @@ itself.
 **Flag:** `FLAG{th3_und3rsc0r3_sl4sh_kn0ws_th3_w4y}`
 
 The superuser credentials from breach 3 authenticate against the PocketBase
-admin API (`http://localhost:8090/_/`, address leaked in dashboard HTML
-comments). Logging in with the superuser token grants unrestricted read/write
+admin API (`http://localhost:8090/_/`, address leaked in the `/admin` panel's
+HTML comment). Logging in with the superuser token grants unrestricted read/write
 over all 9 collections — including editing any user's `role` straight in the
 database — and the `internal_audit` collection holds the final ladder flag. Total
 compromise of the data layer: highest-impact finding of the assessment.
@@ -123,9 +127,10 @@ clicks it. No flag, but the same bug class as breach 7.
 
 Every response leaks `x-pocketbase: http://localhost:8090`,
 `x-42-internal: campus=paris` and version strings in `Server`/`x-powered-by`;
-`robots.txt` enumerates `/admin`, `/staff`, `/internal`, `/backup` and
-`/api/docs-internal`. Pure reconnaissance force-multiplier — exact DB admin
-address, stack versions for CVE lookup, and a map of sensitive routes. No flag.
+`robots.txt` enumerates `/admin`, `/staff`, `/internal`, `/backup`,
+`/api/grades`, `/_/` and `/static/uploads/`. Pure reconnaissance
+force-multiplier — exact DB admin address, stack versions for CVE lookup, and
+a map of sensitive routes. No flag.
 
 ### Breach 10 — Unrestricted file download
 
@@ -133,9 +138,11 @@ address, stack versions for CVE lookup, and a map of sensitive routes. No flag.
 
 `GET /projects/download?file=<name>` resolves the parameter directly against
 the assets directory with no allowlist: any file in the directory can be
-fetched by name, even by unauthenticated visitors. Traversal sequences are
-blocked (verified), but `not found` vs `forbidden` responses leak which files
-exist — the internalstaff guide found there names `/internal/config` and JWT hints,
+fetched by name by any *authenticated* user (anonymous requests are 302'd to
+`/login`). Traversal sequences are blocked (verified: encoded `../` and
+`....//` → 404 `not found`, absolute paths → 403 `forbidden`), but the
+`not found` vs `forbidden` responses leak which paths exist — the
+`staff_guide.pdf` found there names `/internal/config` and JWT hints,
 materially advancing the other breaches. No flag.
 
 ---
@@ -152,7 +159,8 @@ Student
    │  PATCH /api/profile {"role":"cadet"} (allowlist gap)
    ▼
 Cadet ──────────────── 🚩 FLAG{just_p4tch_y0ur_0wn_r0l3_lol}
-   │  forge JWT with leaked secret "42network", role=staff
+   │  forge JWT with leaked secret "42network" (any role accepted
+   │  for auth; /admin stays DB-gated) → /api/grades
    ▼
 Staff ──────────────── 🚩 FLAG{md5_1s_4_n4m3pl4t3_n0t_4_l0ck}
    │  stored XSS → bot SSRF relay → /internal/config (127.0.0.1)
@@ -179,7 +187,8 @@ Side channels (flags of choice — any authenticated level):
 [PATCH role=cadet] ──► cadet ──► /staff/dashboard ──► FLAG 1
         │
         ▼
-[JWT secret "42network" from deploy log] ──► forged staff token ──► /admin ──► FLAG 2
+[JWT secret "42network" from deploy log] ──► forged token (any role) ──► /api/grades ──► FLAG 2
+         │                                  (/admin stays 403 — gate checks the DB role)
         │
         ▼
 [stored XSS → bot SSRF relay] ──► /internal/config ──► FLAG 3 + PB creds

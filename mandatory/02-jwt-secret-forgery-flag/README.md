@@ -5,7 +5,9 @@
 
 ## Explanation
 
-Every page's HTML footer comments ("DEPLOY LOG") state:
+The deploy-log footer comments (they rotate per page; the jwt-secret line was
+observed on `/login`, `/about`, `/forum`, `/agenda`, `/projects`,
+`/newsletter`, `/internal`) state:
 
 ```html
 <!-- v1.2.0 — sophie — initial platform. jwt secret was "42". wil changed it to "42network". progress. -->
@@ -13,13 +15,20 @@ Every page's HTML footer comments ("DEPLOY LOG") state:
 
 The session cookie is an HS256 JWT (`{"alg":"HS256","typ":"JWT"}`) carrying
 `sub`, `login`, `role`, `exp`. Signing a token with secret `"42network"` and
-an arbitrary `role` is accepted by the server. With `role: staff` the
-`/admin` endpoint flips from 403 to 200, and the admin panel's submissions
-table reveals the flag.
+an arbitrary `login`/`role` is accepted by the server for authentication —
+verified with every role value, including `visitor`. The privileged data then
+comes from `/api/grades`: it returns all grade records of the token's `sub`,
+including the "Darkly" meta-project whose `flag` field holds the flag.
+
+`/admin` does **not** fall to the forgery: it stays `403 {"detail":
+"Insufficient privileges"}` for forged `staff`/`god` tokens — that gate
+validates the role against the server-side user record, not the JWT claim.
+It unlocks only for a real DB-privileged session, e.g. the `god` account
+taken over in breach 4, whose `/admin` panel displays this same flag.
 
 Note: the account's PB record is untouched — the sidebar "Access level"
 ladder widget reflects the user record, so the forgery is a pure
-session-layer escalation (cadet → staff).
+session-layer affair.
 
 ## Exploitation script
 
@@ -29,25 +38,29 @@ See `forge_jwt.py` and `exploit.sh` in this folder:
 ./exploit.sh http://localhost:4942 z4p1cnx47mfy50f jdoe cadet
 ```
 
-Expected output ends with a line like:
+Expected output:
 
 ```
+[*] Forging JWTs (baseline role: cadet, then staff; secret: 42network)
+[*] GET /api/grades with forged token
 FLAG{md5_1s_4_n4m3pl4t3_n0t_4_l0ck}
-[*] Bonus: /api/grades with any forged token
-{"grades":[{"id":1,"user_id":9,"grade":100},...
+[*] /admin with forged staff token (expected: stays 403 — DB-gated)
+    /admin -> 403
 ```
 
 `forge_jwt.py` builds the forged token (sub, login, and role supplied on
 the command line); `exploit.sh` calls it twice — once with the account's
-baseline role and once with `staff` — injects it as the `session` cookie
-and pulls `/admin`.
+baseline role and once with `staff` — injects it as the `session` cookie,
+pulls `/api/grades` for the flag, and probes `/admin` to show the gate holds.
 
 ## Impact
 
-- Arbitrary role claim forgery → full session-layer impersonation of any
-  role, including `staff` and `god` (the app-layer check on `/admin` is
-  what gates the ladder here).
-- `/api/grades` also leaks all grade records for the forged `sub`.
+- Arbitrary `login`/`role` claim forgery → session-layer impersonation of any
+  account, accepted for authentication at any role value.
+- `/api/grades` leaks all grade records (including the flag-bearing meta-
+  project) for whatever `sub` the forged token carries.
+- Privileged pages (`/admin`, `/internal/config`) re-validate the role
+  against the server-side user record and stay closed to forgeries.
 
 ## Fix recommendation
 

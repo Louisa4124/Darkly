@@ -8,7 +8,8 @@
 
 The download endpoint resolves the `file` query parameter directly against
 the application's assets directory with **no allowlist**. Any file whose name
-is known (or guessable) inside that directory is served to any visitor:
+is known (or guessable) inside that directory is served to any
+**authenticated** user — anonymous requests are 302'd to `/login` (verified):
 
 ```
 GET /projects/download?file=staff_guide.pdf
@@ -27,16 +28,18 @@ existing-but-blocked files (`forbidden`) from missing ones (`not found`).
 
 ## Steps to reproduce
 
-Run `./exploit.sh [base_url] [session_cookie_jar]`:
+Run `./exploit.sh [base_url] [session_cookie_jar]` — the download step needs
+an authenticated session (any role; e.g. the jar produced by
+`../05-password-reset-token-disclosure/`):
 
 1. `GET /projects/download?file=staff_guide.pdf` → internal staff document
-   returned to an unauthenticated visitor.
+   returned to an authenticated user.
 2. Traversal attempts → blocked (`forbidden` / `not found`).
 3. The error wording differs between existing and missing files.
 
 ## Impact
 
-- Arbitrary in-directory file disclosure to unauthenticated users.
+- Arbitrary in-directory file disclosure to any authenticated user.
 - Internal documents (like the staff guide naming `/internal/config` and its
   JWT hints) materially advance the other breaches.
 - The `not found` vs `forbidden` oracle helps map the served directory.

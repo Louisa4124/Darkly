@@ -20,8 +20,7 @@ HeadlessChrome UA, with `Sec-Fetch-*`/`Origin`/`Referer` header sets, with
 mechanism was **not** identified, but the bot's same-origin fetch passes it.
 That the config is exposed at all is stated by the site's own deploy log:
 
-> *wil: JWT config endpoint moved to /internal/config (localhost only). Do
-> NOT expose.*
+> *NOTE: /internal/config restricted to localhost only. do not expose.*
 
 ### Alternative path (pure XXE, without the bot)
 

@@ -46,7 +46,7 @@ and PocketBase on `http://localhost:8090`; `curl` must be available on `PATH`.
 
 **Side effects:** writes `cookies_sophie.txt` in the current working
 directory, and rotates `sophie`'s password to `G0dPwn3d!2024` — after the
-run, the god account logs in with `sophie@42network.local` / `G0dPwn3d!2024`.
+run, the god account logs in with `sophie@42.tech` / `G0dPwn3d!2024`.
 
 1. Authenticates as PB superuser (`admin@42network.local` /
    `Darkly42Admin!` — leaked by the SSRF breach) against
@@ -56,8 +56,9 @@ run, the god account logs in with `sophie@42network.local` / `G0dPwn3d!2024`.
 3. Dumps the `internal_audit` collection → final flag
    `FLAG{th3_und3rsc0r3_sl4sh_kn0ws_th3_w4y}`.
 4. Rotates `sophie`'s password to `G0dPwn3d!2024` to take over the god
-   account, then logs in on the app as `sophie@42network.local` to
-   demonstrate the write-access takeover.
+   account (the PATCH must carry `passwordConfirm` or PB answers 400),
+   then logs in on the app as `sophie@42.tech` to demonstrate the
+   write-access takeover and prints the resulting access level.
 
 Note: `api/admins/auth-with-password` is the legacy PocketBase admin
 endpoint (works on the bundled PB version; PB ≥ 0.23 uses
