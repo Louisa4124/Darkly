@@ -44,7 +44,7 @@ Decoded cookies: `flag=FLAG{xss_st0r3d_1s_n0t_4_f34tur3_w1l}` plus a
 
 Note: the bot requests the app via `http://127.0.0.1:4942` (loopback) —
 it runs server-side, inside the VM itself. That is what makes the follow-up
-breach (`../stored-xss-bot-ssrf-flag`) possible.
+breach (`../03-stored-xss-bot-ssrf-flag`) possible.
 
 ## Impact
 

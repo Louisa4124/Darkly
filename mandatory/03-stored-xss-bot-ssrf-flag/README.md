@@ -62,7 +62,7 @@ See `ssrf-relay.sh` in this folder:
 
 - Flag 6 disclosed.
 - **PocketBase superuser credentials** disclosed → total backend takeover
-  (see `../pocketbase-superuser-takeover-flag-god` — the breach that
+  (see `../04-pocketbase-superuser-takeover-flag-god` — the breach that
   completes the god transition).
 
 ## Fix recommendation

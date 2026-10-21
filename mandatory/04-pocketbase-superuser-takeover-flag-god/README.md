@@ -6,7 +6,7 @@
 
 ## Explanation
 
-`stored-xss-bot-ssrf-flag` leaks the PocketBase **superuser credentials**.
+`03-stored-xss-bot-ssrf-flag` leaks the PocketBase **superuser credentials**.
 With them, the entire backend is readable *and writable* via the standard PB
 admin API — bypassing every application-level access check the FastAPI layer
 enforces (IDOR, role gating, grade privacy, reset flow, ...).
