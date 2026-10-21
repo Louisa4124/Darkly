@@ -10,6 +10,8 @@ The app is deployed with debug/internal middleware enabled, so **every**
 response leaks internal information through custom headers, and `robots.txt`
 enumerates the routes the developers intended to keep hidden:
 
+Annotated example (the `#` comments are annotations, not part of the response):
+
 ```
 x-pocketbase: http://localhost:8090          # exact address of the DB admin API
 x-42-internal: campus=paris                  # internal metadata
@@ -23,7 +25,8 @@ surfaces. The developers relied on robots.txt as if it were access control.
 
 ## Steps to reproduce
 
-Run `./exploit.sh` — it captures the response headers of the front page and
+Run `./exploit.sh [base_url]` (defaults to `http://localhost:4942`) — it captures
+the response headers of the front page and
 prints robots.txt. No authentication or special conditions: this information
 is handed to every visitor on every request.
 

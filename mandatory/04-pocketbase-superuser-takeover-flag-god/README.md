@@ -9,25 +9,28 @@
 `03-stored-xss-bot-ssrf-flag` leaks the PocketBase **superuser credentials**.
 With them, the entire backend is readable *and writable* via the standard PB
 admin API — bypassing every application-level access check the FastAPI layer
-enforces (IDOR, role gating, grade privacy, reset flow, ...).
+enforces, such as IDOR, role gating, and grade privacy.
 
-The final step rotates the `god` account's (`sophie`) password through the
-PB admin API — full account takeover of the highest-privileged application
-account. Logging in as `sophie` then yields god status (the sidebar "Access
-level" ladder reflects the user record) and unlocks the god-level pages,
-where the `internal_audit` collection contains the final flag.
+The superuser token grants direct read access to every collection — including
+`internal_audit`, which holds the final flag. As a separate demonstration of
+write access, the script also rotates the `god` account's (`sophie`) password
+through the PB admin API — full account takeover of the highest-privileged
+application account. Logging in as `sophie` then yields god status (the
+sidebar "Access level" ladder reflects the user record) and unlocks the
+god-level pages.
 
 ```
 [reset-token leak] ─► student
    ▼ PATCH role=cadet
-[cadet] ── /staff/dashboard ──► FLAG 1
+[cadet] ── /staff/dashboard ──► FLAG 1 = FLAG{just_p4tch_y0ur_0wn_r0l3_lol}
    ▼ forged JWT (secret "42network")
-[staff] ── /admin ─────────────► FLAG 2
+[staff] ── /admin ─────────────► FLAG 2 = FLAG{md5_1s_4_n4m3pl4t3_n0t_4_l0ck}
    ▼ bot SSRF → /internal/config
-[god creds + FLAG 3]
+[god creds + FLAG 3 = FLAG{d3fus3dxml_n3xt_spr1nt_pr0m1s3}]
    ▼ PB superuser auth (this breach)
-[PB superuser] ──► rotate sophie's password ──► login as sophie ──► GOD
-   └── internal_audit collection ──► FLAG 4
+[PB superuser] ──► internal_audit collection ──► FLAG 4 = FLAG{th3_und3rsc0r3_sl4sh_kn0ws_th3_w4y}
+   ▼ rotate sophie's password (write-access demo)
+[login as sophie ──► GOD] — no new flag (see walkthrough.md Annex A)
 ```
 
 ## Exploitation script
@@ -38,6 +41,14 @@ See `exploit.sh` in this folder:
 ./exploit.sh
 ```
 
+**Prerequisites:** the FastAPI app must be running on `http://localhost:4942`
+and PocketBase on `http://localhost:8090`; `curl` and `python3` must be
+available on `PATH`.
+
+**Side effects:** writes `cookies_sophie.txt` in the current working
+directory, and rotates `sophie`'s password to `G0dPwn3d!2024` — after the
+run, the god account logs in with `sophie@42network.local` / `G0dPwn3d!2024`.
+
 1. Authenticates as PB superuser (`admin@42network.local` /
    `Darkly42Admin!` — leaked by the SSRF breach) against
    `http://localhost:8090/api/admins/auth-with-password`.
@@ -45,7 +56,13 @@ See `exploit.sh` in this folder:
    newsletter, agenda_imports, internal_config, internal_audit`).
 3. Dumps the `internal_audit` collection → final flag
    `FLAG{th3_und3rsc0r3_sl4sh_kn0ws_th3_w4y}`.
-4. Rotates `sophie`'s password to take over the god account.
+4. Rotates `sophie`'s password to `G0dPwn3d!2024` to take over the god
+   account, then logs in on the app as `sophie@42network.local` to
+   demonstrate the write-access takeover.
+
+Note: `api/admins/auth-with-password` is the legacy PocketBase admin
+endpoint (works on the bundled PB version; PB ≥ 0.23 uses
+`/api/collections/_superusers/auth-with-password`).
 
 ## Impact
 

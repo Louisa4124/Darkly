@@ -8,8 +8,8 @@ the entry point of the whole ladder.
 
 `POST /reset-password/request` returns the password-reset token directly in
 the `Location` header of its 302 redirect — for **any** email, existing or
-not. No email delivery / out-of-band step is required. Combined with the fact
-that tokens are deterministic (`md5`-derived), this allows full account
+not. No email delivery / out-of-band step is required. Combined with the
+deterministic nature of the tokens (`md5`-derived), this allows full account
 takeover for any known email.
 
 We used it against `jdoe@student.42.tech` to obtain a legitimate `student`

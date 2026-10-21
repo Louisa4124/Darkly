@@ -29,9 +29,18 @@ See `forge_jwt.py` and `exploit.sh` in this folder:
 ./exploit.sh http://localhost:4942 z4p1cnx47mfy50f jdoe cadet
 ```
 
-`forge_jwt.py` builds the forged token (`role` and baseline role supplied on
-the command line); `exploit.sh` injects it as the `session` cookie and pulls
-`/admin`.
+Expected output ends with a line like:
+
+```
+FLAG{md5_1s_4_n4m3pl4t3_n0t_4_l0ck}
+[*] Bonus: /api/grades with any forged token
+{"grades":[{"id":1,"user_id":9,"grade":100},...
+```
+
+`forge_jwt.py` builds the forged token (sub, login, and role supplied on
+the command line); `exploit.sh` calls it twice — once with the account's
+baseline role and once with `staff` — injects it as the `session` cookie
+and pulls `/admin`.
 
 ## Impact
 

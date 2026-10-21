@@ -19,7 +19,10 @@ wil's (`id: k1asdfeditojrb4`) private note contains the flag:
 ```
 
 The same class of leak extends to `/api/users/{id}`, which exposes
-`pw_hint` (`md5(password)`) and `recovery_code` for every user.
+`pw_hint` (`md5(password)`) and `recovery_code` for every user
+(not exercised by the script below). Note that `recovery_code` itself
+holds a spare flag, `FLAG{r3s3t_t0k3n_w4s_just_md5_lol}`, readable for
+benjamin, dorian and thanos via the same IDOR.
 
 ## Exploitation script
 
@@ -28,6 +31,9 @@ See `exploit.sh` in this folder:
 ```bash
 ./exploit.sh http://localhost:4942 cookies_jdoe.txt
 ```
+
+`cookies_jdoe.txt` is the jdoe student session created by the login step in
+`../05-password-reset-token-disclosure/`.
 
 1. Lists user ids via `/api/users` and finds `wil`'s id.
 2. Fetches wil's profile page and extracts the private note / flag.

@@ -3,7 +3,12 @@
 
 Usage: forge_jwt.py <sub> <login> <role> [secret]
 """
-import sys, time, hmac, hashlib, base64, json
+import sys
+import time
+import hmac
+import hashlib
+import base64
+import json
 
 def b64url(data: bytes) -> str:
     return base64.urlsafe_b64encode(data).rstrip(b"=").decode()

@@ -19,14 +19,15 @@ That document openly points to the internal config endpoint — the exact
 anchor used in the SSRF/relay breach to steal `/internal/config`.
 
 Path traversal itself is hardened (tested `%2e%2e%2f`, `....//`,
-`..%2f..%2fetc%2fpasswd` — all answered `forbidden` or `not found`), so the
+`..%2f..%2fetc%2fpasswd`, and the absolute-path probe `/etc/passwd` — all
+answered `forbidden` or `not found`), so the
 weakness is not traversal but the **missing allowlist**: the endpoint accepts
 any *named* file, and its responses act as an oracle distinguishing
 existing-but-blocked files (`forbidden`) from missing ones (`not found`).
 
 ## Steps to reproduce
 
-Run `./exploit.sh`:
+Run `./exploit.sh [base_url] [session_cookie_jar]`:
 
 1. `GET /projects/download?file=staff_guide.pdf` → internal staff document
    returned to an unauthenticated visitor.

@@ -25,14 +25,23 @@ shows the banner with the first ladder flag.
 
 ## Exploitation script
 
-See `exploit.sh` in this folder:
+See `exploit.sh` in this folder. It takes 4 arguments:
 
 ```bash
-./exploit.sh http://localhost:4942 cookies_jdoe.txt
+./exploit.sh <base_url> <cookie_jar> <email> <password>
 ```
 
+Each argument has a default, so the full default invocation is:
+
+```bash
+./exploit.sh http://localhost:4942 cookies_jdoe.txt jdoe@student.42.tech 'Pwned1234!'
+```
+
+The defaults use the seeded student account `jdoe@student.42.tech`
+(password `Pwned1234!`).
+
 1. Escalates own role via `PATCH /api/profile {"role":"cadet"}`.
-2. Re-logs in to refresh the session JWT.
+2. Re-logs in with the given credentials to refresh the session JWT.
 3. Fetches `/staff/dashboard` and extracts the flag from the banner.
 
 ## Impact

