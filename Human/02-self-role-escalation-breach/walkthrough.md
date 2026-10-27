@@ -1,4 +1,4 @@
-# Own patching
+# Insecure permission
 
 Si on tente d'aller sur une page qui n'existe pas "http://localhost:4942/test"
 

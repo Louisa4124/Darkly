@@ -4,6 +4,9 @@ flag: `FLAG{d3fus3dxml_n3xt_spr1nt_pr0m1s3}`
 
 ---
 
+note: peut etre fait en passant par `/agenda` avec une injection de script dans le XML (les
+commentaires html indiquent que `defusedxml` est desactive).
+
 Le bot de moderation est vulnerable aux attaques XSS comme vu dans la faille 3
 On va utiliser ca pour recuperer le contenu de /internal/config, qui n'est accessible que depuis le localhost:
 

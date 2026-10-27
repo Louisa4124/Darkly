@@ -15,9 +15,11 @@
 |
 7. IDOR
 |
-8.
+8. Unrestricted upload
 |
-9.
+9. XSS /newsletter
+|
+10. HTTP header disclosure
 ```
 
 ## Hints
@@ -53,9 +55,9 @@ Disallow: /static/uploads/
 ### 1. -> reset password
 
 escalation: visitor -> student
-flag: nop
+flag: FLAG{r3s3t_t0k3n_w4s_just_md5_lol}
 hints: forum's message
-[detail](./01-password-reset-oken-breach/walkthrough.md)
+[detail](./01-password-reset-token-breach/walkthrough.md)
 
 reset someone else password
 
@@ -101,6 +103,8 @@ flag in `internal_audit`, others flags visible can change own role, and become `
 
 ### 6. JWT forgery
 
+/!\ -> just robot.txt not protect
+
 flag: FLAG{md5_1s_4_n4m3pl4t3_n0t_4_l0ck}
 [details](./06-jwt-secret-breach/walkthrough.md)
 
@@ -133,9 +137,11 @@ flag: nop
 http header disclosure
 
 
-### 11. SQL injection
+### 11. Path traversal
 
-flag: ???
-[detail]()
+flag:
+[details]
+
+## hints ?
 
 in suscribe email (see comment in /staff/dashboard: `someone subscribed "' OR 1=1--@evil.com"`)
