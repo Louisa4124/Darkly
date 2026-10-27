@@ -1,26 +1,13 @@
 
-Si on va sur la page "http://localhost:4942/api/users"
-Accessible depuis Profile > Level Buddies
+Si on tente d'aller sur une page qui n'existe pas "http://localhost:4942/test"
 
-On a alors la liste des users, avec leurs grades.
+On a cet ecran :
 
-Notre compte a un role Student, et les roles au dessus sont respectivement;
-- Cadet
-- Staff
-- God
+![alt text](image.png)
 
-Si on va ensuite sur "http://localhost:4942/api/docs-internal"
-On obtient le schema API avec les champs modifiablesm les roles valides... etc
-On voit cela:
+Qui nous suggere d'aller sur "http://localhost:4942/staff"
 
-   ```
-	"role writable via PATCH /api/profile"
-   ```
-Et :
-
-   ```
-	"flag field accessible via GET /api/grades?student={id}"
-   ```
+Sur cette page, on a le texte suivant: "Cadet access required. Try PATCH /api/profile with the right fields."
 
 On peut essayer de surcharger notre propre role avec:
 
