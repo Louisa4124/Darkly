@@ -1,5 +1,25 @@
 # Audit
 
+```tree
+1. reset password
+|
+2. patch roles
+|
+3. XSS 1
+|
+4. XSS 2
+|
+5. pocketbase -> X
+|
+6. JWT forgery
+|
+7. IDOR
+|
+8.
+|
+9.
+```
+
 ## Hints
 
 ### html comments
@@ -62,7 +82,7 @@ the moderation bot is vulnerable to XSS injection (see forum comments)
 escalation: nop
 flag: `FLAG{d3fus3dxml_n3xt_spr1nt_pr0m1s3}`
 hints: html comment: `NOTE: /internal/config restricted to localhost only. do not expose`
-[details](./04-XSS-injection-2-internal-dump)
+[details](./04-XSS-injection-2-internal-dump/walkthrough.md)
 
 same but we will fetch the restricted `/internal/config` and forward it to us
 give the pockebase creds + flag
@@ -94,9 +114,26 @@ flag: FLAG{1d0r_ur_pr0f1l3_1s_m1n3}
 ### 8. Unrestricted upload
 
 flag: `FLAG{unr3str1ct3d_upl0ad_g0_brrr}`
-[details]()
+[details](./08-unrestricted-upload/walkthrough.md)
 
-### 9. SQL injection
+upload anything as profile picture
+
+### 9. XSS /newsletter
+
+flag: nop
+[details](./09-xss-newsletter/walkthrough.md)
+
+vulnerabilite XSS in form
+
+### 10. Header Disclosure
+
+flag: nop
+[details](./10-http-header-disclosure/walkthrough.md)
+
+http header disclosure
+
+
+### 11. SQL injection
 
 flag: ???
 [detail]()

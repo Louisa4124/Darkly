@@ -2,8 +2,8 @@
 
 flag: `FLAG{th3_und3rsc0r3_sl4sh_kn0ws_th3_w4y}`
 
-un chemin ne renvoit a rien dans le robots.txt: `/_/`.. Si on essayait ce chemin avec pocketbase plutot??....
-
+lien de pocketbase visible dans /staff/dashboard
+un chemin ne renvoit a rien dans le robots.txt: `/_/` Si on essayait ce chemin avec pocketbase plutot?
 `http://127.0.0.1:8090/_/` renviot vers une page de connection de pocketbase
 
 email: admin@42network.local
