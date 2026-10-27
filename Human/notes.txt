@@ -1,0 +1,9 @@
+la commande:
+
+```
+curl -s -X GET "http://localhost:4942/api/grades?student=z4p1cnx47mfy50f" \
+     -b "session=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ6NHAxY254NDdtZnk1MGYiLCJsb2dpbiI6Impkb2UiLCJyb2xlIjoic3R1ZGVudCIsImV4cCI6MTc5MzY5OTAxN30.sZ4Hsg_ab0Arn6E7sTqurNL2l9h0pFrcbaOaA8e00es" \
+     -H "Content-Type: application/json"
+```
+
+renvoie le flag: "FLAG{md5_1s_4_n4m3pl4t3_n0t_4_l0ck}"
