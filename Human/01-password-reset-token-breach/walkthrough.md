@@ -72,7 +72,7 @@ target_email='jdoe@student.42.tech'
 wanted_password='qwerty'
 
 # reset password flow for jdoe (see forum post)
-curl -si -X POST "http://$host/reset-password/request" \
+curl -si -X POST "http://$target/reset-password/request" \
   --data-urlencode 'email=jdoe@student.42.tech'
 
 # set token from response
