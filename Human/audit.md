@@ -9,9 +9,9 @@
 |
 4. XSS 2
 |
-5. pocketbase -> X
+5. pocketbase -> admin
 |
-6. JWT forgery
+6. Open access
 |
 7. IDOR
 |
@@ -101,14 +101,12 @@ flag in `internal_audit`, others flags visible can change own role, and become `
 
 ## Others breach
 
-### 6. JWT forgery
-
-/!\ -> just robot.txt not protect
+### 6. Open access
 
 flag: FLAG{md5_1s_4_n4m3pl4t3_n0t_4_l0ck}
-[details](./06-jwt-secret-breach/walkthrough.md)
+[details](./06-open-access/walkthrough.md)
 
-update jwt right and get /api/grades for darkly
+GET /api/grades
 
 ### 7. IDOR /profile/id
 
@@ -136,12 +134,9 @@ flag: nop
 
 http header disclosure
 
-
 ### 11. Path traversal
 
-flag:
-[details]
+flag: FLAG{d0t_d0t_sl4sh_4ll_th3_w4y_d0wn}
+[details](./11-path-traversal/walkthrought.md)
 
-## hints ?
-
-in suscribe email (see comment in /staff/dashboard: `someone subscribed "' OR 1=1--@evil.com"`)
+download everything
